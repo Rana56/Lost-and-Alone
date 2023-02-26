@@ -6,13 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
+    [SerializeField] AudioSource menuSound;
+
+    void Awake(){
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+	}
+
     public void StartGame(){
         Debug.Log("Start button");
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+        StartCoroutine(WaitForSound());
     }
 
     public void Settings(){
         Debug.Log("Settings button");
+        menuSound.Play();
     }
 
     public void Quit(){
@@ -25,5 +33,11 @@ public class Menu : MonoBehaviour
             Application.Quit();
         }
     }
+
+	IEnumerator WaitForSound(){
+		menuSound.Play();
+		yield return new WaitForSeconds((float)1.5);
+		SceneManager.LoadSceneAsync(1);
+	}
 
 }
