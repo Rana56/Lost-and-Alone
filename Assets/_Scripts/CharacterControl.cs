@@ -18,13 +18,17 @@ public class CharacterControl : MonoBehaviour
 	private Vector3 moveDirection = Vector3.zero;
 	private CharacterController characterController;
 	Animator character;
-	public int id;
+	public int walkingID;
+	public int jumpID;
+	public int runJumpID;
 
 	void Awake()
 	{
 		characterController = GetComponent<CharacterController>();
 		character = GetComponent<Animator>();
-		id = Animator.StringToHash("walkingSpeed");
+		walkingID = Animator.StringToHash("walkingSpeed");
+		jumpID = Animator.StringToHash("jump");
+		runJumpID = Animator.StringToHash("runJump");
 	}
 
 	void Update(){
@@ -54,9 +58,16 @@ public class CharacterControl : MonoBehaviour
 
 			moveDirection.y  = Mathf.Max(0, moveDirection.y);
 
-			if (Input.GetButton("Jump")) 
+			if (Input.GetButton("Jump") && currentSpeed == 0) 
 			{
 				moveDirection.y = jumpSpeed;
+				character.SetTrigger(jumpID);	
+				Debug.Log("Jump");
+			}
+			else if (Input.GetButton("Jump") && currentSpeed > 0){
+				moveDirection.y = jumpSpeed;
+				character.SetTrigger(runJumpID);
+				Debug.Log("RunJump");
 			}
 	    }
 
@@ -68,6 +79,7 @@ public class CharacterControl : MonoBehaviour
 	    transform.Rotate(0, rotation, 0);
 
 		characterController.Move(moveDirection * Time.deltaTime);
-		character.SetFloat(id, currentSpeed);
+		character.SetFloat(walkingID, currentSpeed);
+
 	}
 }
