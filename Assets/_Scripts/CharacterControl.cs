@@ -5,15 +5,15 @@ public class CharacterControl : MonoBehaviour
 {
 	public bool IsGrounded { get {return characterController.isGrounded;}}
 
-	public float speed = 10.0f;
-	public float jumpSpeed = 10.0f;
-	public float gravity = 20.0f;
+	public float speed = 5.0f;
+	public float jumpSpeed = 6.0f;
+	public float gravity = 10.0f;
 	public float rotationSpeed = 100.0f;
-
 	public float currentSpeed = 0.0f;
-	public float maxSpeed = 10.0f;
-	public float acceleration = 2.0f;
-	public float decceleration = 20.0f;
+	public float maxSpeed = 7.0f;
+	public float acceleration = 20.0f;
+	public float decceleration = 40.0f;
+	[SerializeField] private bool m_IsWalking;
 
 	private Vector3 moveDirection = Vector3.zero;
 	private CharacterController characterController;
@@ -41,6 +41,8 @@ public class CharacterControl : MonoBehaviour
 			moveDirection.z = transform.forward.z;
 	        
 			if (isMoving){
+				//m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+				//currentSpeed = m_IsWalking ? speed : maxSpeed;
 				currentSpeed += ((acceleration * input) * Time.deltaTime);
 				currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed, maxSpeed);
 			}

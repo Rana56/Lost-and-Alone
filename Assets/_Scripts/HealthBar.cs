@@ -27,6 +27,7 @@ public class HealthBar : MonoBehaviour
 
         for(int j = 0; j < hearts.Count; j++){
             int heartStatus = (int)Mathf.Clamp(player.currentHealth - (j * 2), 0, 2);   //if value less than 0 or more than 2, returned will be either 0 or 2 otherwise regular value returned
+            Debug.Log("heartstat: "+heartStatus);
             hearts[j].SetHeartImg((HeartStatus)heartStatus);
         }
     }

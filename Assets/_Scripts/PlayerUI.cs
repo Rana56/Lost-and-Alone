@@ -9,7 +9,10 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private TMP_Text timeText;
 
     void Update(){
-        timeText.text = String.Format("Playtime - {0:00:00}", Time.timeSinceLevelLoad);
+        float t = Time.timeSinceLevelLoad;
+		int mins = (int)( t / 60 );
+		int rest = (int)(t % 60);
+		timeText.text = string.Format("Playtime - {0:D2}:{1:D2}", mins, rest);
     }
 }
 

@@ -11,15 +11,23 @@ public class CameraController : MonoBehaviour
     public float displacementY = 3f;
     public float easing = 0.1f;
 
+    public float mouseSensitivity = 100f;
+    private float xRotation = 0f;
+    //private float yRotation = 0f;
+
     void Awake(){
         follow = true;
+    }
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update (){
         if (follow){
             //transform.position = target.position - (target.forward * distanceFromTarget);
-            //Vector3 newPos = target.position - (Vector3.forward * distanceFromTarget);
-            Vector3 newPos = target.position - (target.forward * distanceFromTarget);
+            Vector3 newPos = target.position - (Vector3.forward * distanceFromTarget);
+            //Vector3 newPos = target.position - (target.forward * distanceFromTarget);
 
             newPos.y = target.position.y + displacementY;
             //newPos.y = displacementY;
@@ -29,8 +37,17 @@ public class CameraController : MonoBehaviour
             //transform.position = newPos;
 
             //match the rotation of the target so we look directly at it
-            transform.rotation = target.rotation; 
+            //transform.rotation = target.rotation; 
             //transform.LookAt(target.position);
+
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            transform.Rotate(Vector3.up * mouseX);
 
         }
         else {
