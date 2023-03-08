@@ -21,16 +21,18 @@ public class PlayerControl : MonoBehaviour
     private CharacterController controller;
 	Animator character;
 	public int walkingID;
-	public int jumpID;
-	public int runJumpID;
+	public int isJumpID;
+    public int isMoveID;
+    private bool isJumping;
 
 	void Awake()
 	{
 		controller = GetComponent<CharacterController>();
 		character = GetComponentInChildren<Animator>();
 		walkingID = Animator.StringToHash("walkingSpeed");
-		jumpID = Animator.StringToHash("jump");
-		runJumpID = Animator.StringToHash("runJump");
+		isJumpID = Animator.StringToHash("isJump");
+        isMoveID = Animator.StringToHash("isMove");
+
 	}
 
     void Start(){
@@ -62,26 +64,43 @@ public class PlayerControl : MonoBehaviour
 
             movementDirection = Quaternion.Euler(0f, tAngle, 0f) * Vector3.forward;              //gives direction to movement considering camera
             controller.Move(movementDirection.normalized * currentSpeed * Time.deltaTime);            //Moves characted independent of frame rate
+            
+            //character.SetBool(isMoveID, isMoving);
         } 
         else {
             currentSpeed = 0;
+            //character.SetBool(isMoveID, isMoving);
         }       
 
+        moveVelocity.y -= gravity * Time.deltaTime;         // Apply gravity
+        
         if (controller.isGrounded && moveVelocity.y < 0)
         {
-            moveVelocity.y = 0f;
+            moveVelocity.y = -8f;
         }
 
+        /*
         // Jump when the spacebar is pressed and the player is on the ground
-        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded)
+        if (controller.isGrounded)
         {
-            //character.SetTrigger(jumpID);
-            moveVelocity.y = jumpSpeed;
-            Debug.Log("jump- " + controller.isGrounded);
-        }
-        moveVelocity.y -= gravity * Time.deltaTime;         // Apply gravity
+            if (Input.GetKeyDown(KeyCode.Space)){
+                moveVelocity.y = jumpSpeed;
+                Debug.Log("jump - " + controller.isGrounded);
+            }
+        } */
+
         controller.Move(moveVelocity * Time.deltaTime);   // Move the player
-              
+        
+        if (Input.GetKeyDown(KeyCode.Space)){
+            if (controller.isGrounded)
+            {
+                moveVelocity.y = jumpSpeed;
+            } 
+            Debug.Log("jump outside - " + controller.isGrounded);
+        }
+        
         character.SetFloat(walkingID, currentSpeed);
+        //character.SetBool(isJumpID, isJumping);
+        //character.SetBool(isMoveID, isMoving);
     }
 }
