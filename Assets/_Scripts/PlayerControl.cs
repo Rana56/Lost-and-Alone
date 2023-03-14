@@ -15,15 +15,24 @@ public class PlayerControl : MonoBehaviour
     private Vector3 direction;
     private Vector3 movementDirection;
     private Vector3 moveVelocity = Vector3.zero;
-    public float jumpSpeed = 60f;
+    public float jumpSpeed = 6f;
 	public float gravity = 9.8f;
 	
     private CharacterController controller;
 	Animator character;
-	public int walkingID;
-	public int isJumpID;
-    public int isMoveID;
+	private int walkingID;
+	private int isJumpID;
+    private int isMoveID;
+    private int isFallID;
+    private int isGroundID;
+    
+    private bool isGrounded;
     private bool isJumping;
+    private bool isFalling;
+    public float jumpDelay;            //Jump button delays to see if character jumped recently - pressing button to late or eary will still make character jump
+	private float? lastGroundedTime;    //field is null-able so variable can hold float or null 
+    private float? jumpButtonPressed;
+
 
 	void Awake()
 	{
@@ -32,7 +41,8 @@ public class PlayerControl : MonoBehaviour
 		walkingID = Animator.StringToHash("walkingSpeed");
 		isJumpID = Animator.StringToHash("isJump");
         isMoveID = Animator.StringToHash("isMove");
-
+        isFallID = Animator.StringToHash("isFall");
+        isGroundID = Animator.StringToHash("isGrounded");
 	}
 
     void Start(){
@@ -50,8 +60,63 @@ public class PlayerControl : MonoBehaviour
         direction = new Vector3(horizontal, 0, vertical);       //Move in x and z axis, not y
         direction.Normalize();      //So going daiagonally doesn't increase speed     
 
+        moveVelocity.y -= gravity * Time.deltaTime;         // Apply gravity
+
+        if (controller.isGrounded){
+            lastGroundedTime = Time.time;       // number of seconds since game started - last time grounded
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            jumpButtonPressed = Time.time;
+        }
+
+        if (Time.time - lastGroundedTime <= jumpDelay)              //checks if character was on the ground within a grace period
+        {
+            moveVelocity.y = -5f;
+            character.SetBool(isGroundID, true);
+            isGrounded = true;
+            character.SetBool(isJumpID, false);
+            isJumping = false;
+            character.SetBool(isFallID, false);
+
+            if (Time.time - jumpButtonPressed <= jumpDelay){
+                /*
+                if (currentSpeed == 0){
+					StartCoroutine(JumpBuffer());
+                }
+                else {
+                    character.SetTrigger(isJumpID);
+                    moveVelocity.y = jumpSpeed;
+                }
+                Debug.Log("jump - " + controller.isGrounded);
+                */
+                moveVelocity.y = jumpSpeed;
+                character.SetBool(isJumpID, true);
+                isJumping = true;
+
+                lastGroundedTime = null;
+                jumpButtonPressed = null; 
+            }
+        } 
+        else {
+            character.SetBool(isGroundID, false);
+            isGrounded = false;
+
+            //check if character is falling - transition when jumping up to down - when falling of ledge
+            if((isJumping && moveVelocity.y < 0) || (moveVelocity.y < -2)){
+                character.SetBool(isFallID, true);
+            }
+        }
+
+        /*
+        if (controller.isGrounded && moveVelocity.y < 0)
+        {
+            moveVelocity.y = -5f;
+        }*/
+
         //Check if there are inputs to move
         if(direction.magnitude >= 0.1f){
+            character.SetBool(isMoveID, true);
             //check if shift pressed
             isRunning = !Input.GetKey(KeyCode.LeftShift);
             currentSpeed = isRunning ? speed : runSpeed;
@@ -65,42 +130,37 @@ public class PlayerControl : MonoBehaviour
             movementDirection = Quaternion.Euler(0f, tAngle, 0f) * Vector3.forward;              //gives direction to movement considering camera
             controller.Move(movementDirection.normalized * currentSpeed * Time.deltaTime);            //Moves characted independent of frame rate
             
-            //character.SetBool(isMoveID, isMoving);
         } 
         else {
             currentSpeed = 0;
-            //character.SetBool(isMoveID, isMoving);
+            character.SetBool(isMoveID, false);
         }       
 
-        moveVelocity.y -= gravity * Time.deltaTime;         // Apply gravity
-        
-        if (controller.isGrounded && moveVelocity.y < 0)
-        {
-            moveVelocity.y = -8f;
-        }
-
         /*
-        // Jump when the spacebar is pressed and the player is on the ground
-        if (controller.isGrounded)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)){
-                moveVelocity.y = jumpSpeed;
-                Debug.Log("jump - " + controller.isGrounded);
-            }
-        } */
-
-        controller.Move(moveVelocity * Time.deltaTime);   // Move the player
-        
         if (Input.GetKeyDown(KeyCode.Space)){
             if (controller.isGrounded)
             {
-                moveVelocity.y = jumpSpeed;
+                if (Mathf.Abs(currentSpeed) < 0.1){
+					StartCoroutine(JumpBuffer());
+                }
+                else {
+                    character.SetTrigger(isJumpID);
+                    moveVelocity.y = jumpSpeed;
+                }
+                
             } 
             Debug.Log("jump outside - " + controller.isGrounded);
-        }
-        
-        character.SetFloat(walkingID, currentSpeed);
-        //character.SetBool(isJumpID, isJumping);
-        //character.SetBool(isMoveID, isMoving);
+        }*/
+
+        controller.Move(moveVelocity * Time.deltaTime);   // Movement for jump
+        character.SetFloat(walkingID, currentSpeed, 0.05f, Time.deltaTime);
+
     }
+
+    IEnumerator JumpBuffer ()
+	{
+		character.SetTrigger(isJumpID);
+		yield return new WaitForSeconds(1.0f);
+		moveVelocity.y = jumpSpeed;
+	}
 }
