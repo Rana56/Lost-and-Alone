@@ -33,6 +33,7 @@ public class PlayerControl : MonoBehaviour
 	private float? lastGroundedTime;    //field is null-able so variable can hold float or null 
     private float? jumpButtonPressed;
 
+    [SerializeField] private AudioSource jumpSound;
 
 	void Awake()
 	{
@@ -93,6 +94,7 @@ public class PlayerControl : MonoBehaviour
                 moveVelocity.y = jumpSpeed;
                 character.SetBool(isJumpID, true);
                 isJumping = true;
+                jumpSound.Play();
 
                 lastGroundedTime = null;
                 jumpButtonPressed = null; 
