@@ -12,8 +12,8 @@ public class musicBG : MonoBehaviour
         StartCoroutine(isPlaying());
     }
 
-    void Update(){
-        
+    void Awake(){
+        DontDestroyOnLoad(this);
     }
 
     private void playMusic(){

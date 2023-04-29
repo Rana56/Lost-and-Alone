@@ -22,8 +22,6 @@ public class AgentController : MonoBehaviour {
     [SerializeField] private float distanceToStartAttackingTarget = 3;
     public float timePursuingTarget = 5;
     public float rotationSpeed = 5.0f;
-
-    [SerializeField] AudioSource punchSound;
     
 
     void Awake() {
@@ -133,7 +131,6 @@ public class AgentController : MonoBehaviour {
 	{
 		if (ShouldAttack())
 		{
-            punchSound.Play();
             animController.SetTrigger(attackingHashId);
             //StartCoroutine(attackPunch());
 		}
@@ -173,7 +170,6 @@ public class AgentController : MonoBehaviour {
     IEnumerator attackPunch(){
         Debug.Log("attack couroutine");
         yield return new WaitForSeconds(2);
-        punchSound.Play();
         animController.SetTrigger(attackingHashId);
     }
 

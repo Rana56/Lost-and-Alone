@@ -18,8 +18,8 @@ public class HealthBar : MonoBehaviour
         RemoveHearts();
 
         //1 heart = 2 health points - find out how much hearts to make based on max health
-        float remainder = player.maxHealth % 2; //Checks if health is odd or even
-        int totalHearts = (int) ((player.maxHealth / 2) + remainder);
+        float remainder = player.getMaxHealth() % 2; //Checks if health is odd or even
+        int totalHearts = (int) ((player.getMaxHealth() / 2) + remainder);
 
         for(int i = 0; i < totalHearts; i++){
             addEmptyHeart();

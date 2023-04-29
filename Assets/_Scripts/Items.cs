@@ -16,10 +16,15 @@ public class Items : MonoBehaviour
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
                 Debug.Log("Gem collected");
             }
-            else if (gameObject.tag =="Heart"){
+            else if (gameObject.tag == "Heart"){
                 health.addHealth(1);
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
                 Debug.Log("health added");
+            }
+            else if (gameObject.tag == "MegaHealth"){
+                health.MegaHealth();
+                AudioSource.PlayClipAtPoint(collectSound, transform.position);
+                Debug.Log("Mega health added");
             }
             
             gameObject.SetActive(false);
