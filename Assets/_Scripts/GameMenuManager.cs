@@ -18,6 +18,7 @@ public class GameMenuManager : MonoBehaviour
     public GameObject startUI;
     public GameObject victoryUI;
     public GameObject endUI;
+    [SerializeField] private TMP_Text totalTime;
     public GameObject deathUI;
 
     void Awake(){
@@ -97,6 +98,11 @@ public class GameMenuManager : MonoBehaviour
         Time.timeScale = 0f;
         GameIsPaused = true;
         Debug.Log("endUI open");
+
+        float t = TimeScoreManager.Instance.GetTime();
+		int mins = (int)( t / 60 );
+		int rest = (int)(t % 60);
+        totalTime.text = string.Format("Total Time - {0:D2}:{1:D2}", mins, rest);
 
         Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;

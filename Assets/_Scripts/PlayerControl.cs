@@ -34,6 +34,8 @@ public class PlayerControl : MonoBehaviour
     private float? jumpButtonPressed;
 
     [SerializeField] private AudioSource jumpSound;
+    //[SerializeField] private AudioSource walkSound;
+    //[SerializeField] private AudioSource runSound;
 
 	void Awake()
 	{
@@ -80,6 +82,9 @@ public class PlayerControl : MonoBehaviour
             isJumping = false;
             character.SetBool(isFallID, false);
 
+            //walkSound.enabled = false;
+            //runSound.enabled = false;
+
             if (Time.time - jumpButtonPressed <= jumpDelay){
                 /*
                 if (currentSpeed == 0){
@@ -108,6 +113,9 @@ public class PlayerControl : MonoBehaviour
             if((isJumping && moveVelocity.y < 0) || (moveVelocity.y < -2)){
                 character.SetBool(isFallID, true);
             }
+
+            //walkSound.enabled = false;
+            //runSound.enabled = false;
         }
 
         /*
@@ -121,6 +129,15 @@ public class PlayerControl : MonoBehaviour
             character.SetBool(isMoveID, true);
             //check if shift pressed
             isRunning = !Input.GetKey(KeyCode.LeftShift);
+            /*if(!isRunning){
+                currentSpeed = runSpeed;
+                walkSound.enabled = false;
+                runSound.enabled = true;
+            } else {
+                currentSpeed = speed;
+                walkSound.enabled = true;
+                runSound.enabled = false;
+            }*/
             currentSpeed = isRunning ? speed : runSpeed;
 
             //Rotate character in y axis to point in the give direction
@@ -136,6 +153,7 @@ public class PlayerControl : MonoBehaviour
         else {
             currentSpeed = 0;
             character.SetBool(isMoveID, false);
+            
         }       
 
         /*

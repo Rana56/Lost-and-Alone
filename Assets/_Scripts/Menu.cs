@@ -9,16 +9,38 @@ using System;
 
 public class Menu : MonoBehaviour
 {
-    [SerializeField] AudioSource menuSound;
-    [SerializeField] AudioSource menuClose;
-    [SerializeField] TMP_Text volumeTextUI;
+    [SerializeField] private AudioSource menuSound;
+    [SerializeField] private AudioSource menuClose;
+    [SerializeField] private TMP_Text volumeTextUI;
+    [SerializeField] private TMP_Text bestTime;
     public AudioMixer audioMixer;
     
 
     void Awake(){
 		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
+
+        if (TimeScoreManager.Instance != null){
+            TimeScoreManager.Instance.resetTime();
+        }
+
+        GameObject bgObject = GameObject.Find("BGMusic");
+        if(bgObject != null){
+            Destroy(bgObject);
+        }
 	}
+
+    void Start(){
+        RemoteHighScoreManager.Instance.GetHighScore(UpdateTimeUI);
+    }
+
+    void UpdateTimeUI(float score){
+        int mins = (int)(score / 60 );
+		int rest = (int)(score % 60);
+
+        if (score > 0) bestTime.text = string.Format("Total Best Time - {0:D2}:{1:D2}", mins, rest);
+        else bestTime.text = "No Best Time!";
+    }
 
     public void StartGame(){
         Debug.Log("Start button");

@@ -18,6 +18,9 @@ public class PlayerUI : MonoBehaviour
         totalGems = GameObject.FindGameObjectsWithTag("Gem").Length;
         gemText.text = string.Format("Gems: {0}/{1}", collectedGem, totalGems);
         getBest();
+
+        RemoteHighScoreManager.Instance.GetHighScore(UpdateTimeUI);
+        
     }
 
     void Update(){
@@ -36,7 +39,15 @@ public class PlayerUI : MonoBehaviour
         t = PlayerPrefs.GetFloat("time");
 		int mins = (int)( t / 60 );
 		int rest = (int)(t % 60);
-        bestTime.text = string.Format("Best Time: {0:D2}:{1:D2}", mins, rest);
+        bestTime.text = string.Format("Total Best Time - {0:D2}:{1:D2}", mins, rest);
+    }
+
+    void UpdateTimeUI(float score){
+        int mins = (int)(score / 60 );
+		int rest = (int)(score % 60);
+
+        if (score > 0) bestTime.text = string.Format("Total Best Time - {0:D2}:{1:D2}", mins, rest);
+        else bestTime.text = "No Best Time!";
     }
 
     public float GetTime(){

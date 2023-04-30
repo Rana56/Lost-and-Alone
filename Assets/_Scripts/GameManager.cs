@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 
     void Awake(){
         Instance = this;
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     void Start(){
@@ -52,11 +53,36 @@ public class GameManager : MonoBehaviour
     private void HandleEnd()
     {
         Debug.Log("End event Invoke");
+
+        float time = ui.GetTime();
+        TimeScoreManager.Instance.AddTime(time);
+        
+        //set score to backendless
+        RemoteHighScoreManager.Instance.GetHighScore(CheckTimeScore);
+    }
+
+    public void CheckTimeScore(float bestScore){
+        float totalTime = TimeScoreManager.Instance.GetTime();
+        if(totalTime < bestScore || bestScore == 0){
+            RemoteHighScoreManager.Instance.SetHighScore(totalTime);
+            Debug.Log("New Time set");
+        }
+        
+        Debug.Log("Times: Total: " + totalTime + ", Best: " + bestScore);
     }
 
     private void HandleVictory()
     {
         Debug.Log("Victory event Invoke");
+        //PlayerPrefSave();
+        float time = ui.GetTime();
+        TimeScoreManager.Instance.AddTime(time);
+        Debug.Log("Time manager: " + TimeScoreManager.Instance.GetTime());
+
+        //should save score here
+    }
+
+    private void PlayerPrefSave(){
         float time = ui.GetTime();
         
         if(PlayerPrefs.HasKey("time")){
@@ -72,8 +98,6 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("time", time);
             Debug.Log("new time test");
         }
-
-        //should save score here
     }
 
     private void HandleDeath()
@@ -88,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         //gems == totalGems - final
         //gems >= 2 - testing
-        if (gems >= 2){
+        if (gems == totalGems){
             if(SceneManager.GetActiveScene().name == "Map 2"){
                 //check if final scence
                 Debug.Log("End");
