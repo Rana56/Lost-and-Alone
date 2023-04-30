@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <PlayerState xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <position>
-    <x>24.4837036</x>
-    <y>8.297882</y>
-    <z>0.3761835</z>
+    <x>-41.31533</x>
+    <y>13.680666</y>
+    <z>32.07948</z>
   </position>
   <rotation>
     <x>0</x>
-    <y>0.8766469</y>
+    <y>0.587668657</y>
     <z>0</z>
-    <w>-0.481134444</w>
+    <w>0.80910176</w>
     <eulerAngles>
       <x>-0</x>
-      <y>237.519043</y>
+      <y>71.98348</y>
       <z>0</z>
     </eulerAngles>
   </rotation>

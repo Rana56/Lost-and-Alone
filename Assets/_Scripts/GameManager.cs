@@ -58,24 +58,21 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Victory event Invoke");
         float time = ui.GetTime();
-        Debug.Log(time);
-        /*
+        
         if(PlayerPrefs.HasKey("time")){
             float current = PlayerPrefs.GetFloat("time");
+            Debug.Log("Time is set");
 
             if(time < current){
                 PlayerPrefs.SetFloat("time", time);
+                Debug.Log("setting new time");
             }
         }
         else {
             PlayerPrefs.SetFloat("time", time);
-            Debug.Log(PlayerPrefs.GetFloat("time"));
-        }*/
-
-        if (time > PlayerPrefs.GetFloat("time", 0)){
-            PlayerPrefs.SetFloat("time", time);
-             
+            Debug.Log("new time test");
         }
+
         //should save score here
     }
 

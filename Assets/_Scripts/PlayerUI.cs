@@ -33,7 +33,10 @@ public class PlayerUI : MonoBehaviour
     }
 
     private void getBest(){
-        bestTime.text = PlayerPrefs.GetFloat("time").ToString();
+        t = PlayerPrefs.GetFloat("time");
+		int mins = (int)( t / 60 );
+		int rest = (int)(t % 60);
+        bestTime.text = string.Format("Best Time: {0:D2}:{1:D2}", mins, rest);
     }
 
     public float GetTime(){
