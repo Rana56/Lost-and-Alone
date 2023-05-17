@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         //gems == totalGems - final
         //gems >= 2 - testing
-        if (gems == totalGems){
+        if (gems >= 2){
             if(SceneManager.GetActiveScene().name == "Map 2"){
                 //check if final scence
                 Debug.Log("End");
